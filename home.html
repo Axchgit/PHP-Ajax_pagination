@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title>商品列表</title>
+ <script type="text/javascript">
+	//通过页面加载事件实现分页数据获取
+	function getGoods(url){
+		//通过Ajax对象获得分页信息
+		var obj = new XMLHttpRequest();
+
+		obj.onreadystatechange = function(){
+			if(obj.readyState==4 && obj.status==200){
+				//接收服务器端的响应信息
+				eval("var info="+obj.responseText);
+				//拼接输出的字符串
+				var dataList = "<tr><td>ID</td><td>名称</td><td>价格</td></tr>";
+				for(var i=0;i<info.length-1;i++){
+					dataList += "<tr><td>"+info[i].goods_id+"</td>";
+					dataList += "<td>"+info[i].goods_name+"</td>";
+					dataList += "<td>"+info[i].market_price+"</td></tr>";
+				}
+				dataList += "<tr><td colspan=3>"+info[info.length-1]+"</td></tr>";
+				//将字符串写入到网页上
+				document.getElementById('result').innerHTML = dataList;
+				
+			}
+		}
+		obj.open('get',url);
+		obj.send();
+	}
+	window.onload = function(){
+		getGoods('./data.php');
+	}
+ </script>
+<style type="text/css">
+   a{border:1px solid #fff;text-decoration:none;color:#999;padding:2px 4px;margin:0
+    2px;line-height:20px;}
+   a:hover{background:#f0f0f0;border:1px solid #999;}
+  .curr{background:#f0f0f0;border:1px solid #999;}
+   table{ width:600px;cellspacing:2px; background-color:#333333;}
+   tr{height:30px;}
+   td{width:200px; background-color:#FFFFFF; text-align:center;}
+   h2{ text-align:center}
+ </style>
+</head>	
+<body>
+	<h2>Ajax实现商品列表无刷新分页</h2>
+ 	<table id="result" align="center">
+	</table>
+	<div id="bottom" align="center"><div>
+<script type="text/javascript">
+	//获取一个随机数，用于判断无刷新分页效果
+	var num = "随机数值：";
+	 num += Math.ceil(Math.random()*10);
+     //将随机数字符串写入到网页中
+	document.getElementById('bottom').innerHTML = num;
+</script>
+</body>
+</html>
