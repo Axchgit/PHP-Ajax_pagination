@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <title></title>
+ <script type="text/javascript">
+	//通过页面加载事件实现上传文件时显示进度条
+	function sub(){
+		//实例化Ajax对象
+		var obj = new XMLHttpRequest();
+		//接收响应的信息
+		obj.onreadystatechange = function(){
+			if(obj.readyState==4 && obj.status==200){
+				document.getElementById('con').innerHTML = obj.responseText;
+			}
+		}
+		//onprogress属性通过主流浏览器的“事件对象evt”感知当前附件上传情况
+		obj.upload.onprogress = function(evt){
+
+			//上传附件大小的百分比
+			//其中evt.total表示附件总大小，evt.loaded表示已经上传附件大小
+			var per = Math.floor((evt.loaded/evt.total)*100)+"%";
+			//当上传文件时，显示进度条
+			document.getElementById('parent').style.display = 'block'; 
+			//通过上传百分比设置进度条样式的宽度
+			document.getElementById('son').style.width = per;
+			//在进度条上显示上传的进度值
+			document.getElementById('son').innerHTML = per;
+		}
+		//通过FormData收集零散的上传文件信息
+		var fm = document.getElementById("userfile3").files[0];
+		var fd = new FormData();
+		fd.append('userfile',fm);
+
+		obj.open('post','upData.php');
+		obj.send(fd);
+	}
+ </script>
+ <style type="text/css">
+	#parent{width:200px;height:20px;border: 2px solid gray;background:lightgray;  
+display: none;}
+	#son{width:0;height:100%;background:lightgreen;text-align:center;}
+ </style>
+</head>
+<body>
+	<h2>Ajax实现进度条文件上传</h2>
+	<div id="parent">
+		<div id="son"></div>
+	</div> 
+	<p id="con"></p>
+	<input type="file" name="userfile" id="userfile3"><br /><br />
+	<input type="button" onclick="sub()" value="文件上传"/>
+</body>
